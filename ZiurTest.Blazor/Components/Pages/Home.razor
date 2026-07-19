@@ -5,6 +5,7 @@
 @using ZiurTest.Blazor.Models
 @using ZiurTest.Blazor.Services
 @inject IInventarioService InventarioService
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Inventario - Ziur Software</PageTitle>
 
@@ -16,7 +17,7 @@
                     Grilla de Inventario - Ziur Software
                 </h3>
                 <div class="d-flex gap-2">
-                    <button class="btn btn-outline-light btn-sm fw-semibold" @onclick="() => showJsonView = !showJsonView">
+                    <button class="btn btn-outline-light btn-sm fw-semibold" @onclick="ToggleJsonViewAsync">
                         @(showJsonView ? "Ocultar JSON" : "Ver JSON Renderizado")
                     </button>
                     <button class="btn btn-light btn-sm fw-semibold" @onclick="CargarDatosAsync" disabled="@isLoading">
@@ -137,7 +138,7 @@
 
             @if (showJsonView && FilteredItems != null)
             {
-                <div class="mt-4 p-3 bg-dark text-light rounded-3 shadow-sm">
+                <div class="mt-4 p-3 bg-dark text-light rounded-3 shadow-sm" id="jsonViewerBlock">
                     <div class="d-flex justify-content-between align-items-center mb-2 border-bottom border-secondary pb-2">
                         <h5 class="mb-0 text-info font-monospace fs-6">JSON Renderizado Actual (@FilteredItems.Count() objetos)</h5>
                         <small class="text-muted">Serialización en tiempo real</small>
@@ -199,6 +200,16 @@
     protected override async Task OnInitializedAsync()
     {
         await CargarDatosAsync();
+    }
+
+    private async Task ToggleJsonViewAsync()
+    {
+        showJsonView = !showJsonView;
+        if (showJsonView)
+        {
+            await Task.Delay(50);
+            await JSRuntime.InvokeVoidAsync("eval", "window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })");
+        }
     }
 
     private async Task CargarDatosAsync()
