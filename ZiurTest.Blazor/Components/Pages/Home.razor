@@ -1,0 +1,80 @@
+It looks like you may be offline (can you connect to www.microsoft.com?) and have no compatible installations of .NET 10.0 for ms-dotnettools.csdevkit.
+@inject IInventarioService InventarioService
+It looks like you may be offline (can you connect to www.microsoft.com?) and have no compatible installations of .NET 10.0.10 for ms-dotnettools.csdevkit.
+<PageTitle>Inventario - Ziur Software</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">🚀 Consulta de Inventario - Prueba Técnica Ziur Software</h3>
+        </div>
+        <div class="card-body">
+            @if (isLoading)
+            {
+                <div class="text-center my-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando datos...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Consultando la API de inventario...</p>
+                </div>
+            }
+            else if (errorMessage != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <strong>Error:</strong> @errorMessage
+                </div>
+            }
+            else if (items == null || !items.Any())
+            {
+                <div class="alert alert-warning" role="alert">
+                    No se encontraron registros de inventario.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <QuickGrid Items="items!.AsQueryable()" Class="table table-hover table-striped border">
+                        <PropertyColumn Property="@(p => p.Codigo)" Title="Código" Sortable="true" />
+                        <PropertyColumn Property="@(p => p.Descripcion)" Title="Descripción" Sortable="true" />
+                        <TemplateColumn Title="Estado (VActiva)">
+                            @if (context.VActiva)
+                            {
+                                <span class="badge bg-success">Activa</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Inactiva</span>
+                            }
+                        </TemplateColumn>
+                    </QuickGrid>
+                </div>
+                <div class="mt-3 text-muted small">
+                    Total de registros encontrados: <strong>@items.Count</strong>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<InventarioItemDto>? items;
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            isLoading = true;
+            items = await InventarioService.GetItemsAsync();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"No se pudo establecer conexión con el servidor: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}
