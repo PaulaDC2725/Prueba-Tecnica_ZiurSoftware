@@ -29,4 +29,18 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
+// Endpoint de la API local para consumo desde el front-end (proxy seguro)
+app.MapGet("/api/inventario", async (IInventarioService inventarioService) =>
+{
+    try
+    {
+        var items = await inventarioService.GetItemsAsync();
+        return Results.Ok(items);
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(detail: ex.Message, statusCode: 500);
+    }
+});
+
 app.Run();
