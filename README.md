@@ -52,4 +52,4 @@ Durante el ciclo de desarrollo se utilizó la herramienta antigravity CLI impuls
    dotnet run --project ZiurTest.Blazor/ZiurTest.Blazor.csproj
    ```
 
-5. Acceder a la aplicación desde el navegador en la URL HTTPS indicada en la consola.
+5. Access the application from the browser at the HTTPS URL indicated on the console.
