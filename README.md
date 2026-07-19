@@ -48,8 +48,9 @@ Durante el ciclo de desarrollo se utilizó la herramienta antigravity CLI impuls
    ```
 
 4. Ejecutar la aplicación:
-   ```bash
-   dotnet run --project ZiurTest.Blazor/ZiurTest.Blazor.csproj
+   Bash shell
+   cd ZiurTest.Blazor
+   dotnet run 
    ```
 
-5. Access the application from the browser at the HTTPS URL indicated on the console.
+5. Acceder a la aplicación desde el navegador en la URL HTTPS indicada en la consola.
