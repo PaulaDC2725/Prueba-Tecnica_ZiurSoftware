@@ -30,20 +30,31 @@ public class InventarioService : IInventarioService
             using var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
-            var jsonElement = await response.Content.ReadFromJsonAsync<JsonElement>();
+            var rawJson = await response.Content.ReadAsStringAsync();
+            
+            // Consologuear el JSON recibido en consola
+            _logger.LogInformation("JSON recibido de la API: {RawJson}", rawJson);
+            Console.WriteLine($"[JSON API REST]: {rawJson}");
+
+            using var doc = JsonDocument.Parse(rawJson);
+            var jsonElement = doc.RootElement;
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+            List<InventarioItemDto> result = new();
 
             if (jsonElement.ValueKind == JsonValueKind.Array)
             {
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                return jsonElement.Deserialize<List<InventarioItemDto>>(options) ?? new List<InventarioItemDto>();
+                result = jsonElement.Deserialize<List<InventarioItemDto>>(options) ?? new List<InventarioItemDto>();
             }
             else if (jsonElement.ValueKind == JsonValueKind.Object && jsonElement.TryGetProperty("Value", out var valueProperty))
             {
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                return valueProperty.Deserialize<List<InventarioItemDto>>(options) ?? new List<InventarioItemDto>();
+                result = valueProperty.Deserialize<List<InventarioItemDto>>(options) ?? new List<InventarioItemDto>();
             }
 
-            return new List<InventarioItemDto>();
+            _logger.LogInformation("Total de elementos deserializados: {Count}", result.Count);
+            Console.WriteLine($"[InventarioService] Elementos procesados: {result.Count}");
+
+            return result;
         }
         catch (Exception ex)
         {
