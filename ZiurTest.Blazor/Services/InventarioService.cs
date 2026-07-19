@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Net.Http.Headers;
 using ZiurTest.Blazor.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace ZiurTest.Blazor.Services;
 
@@ -10,22 +11,26 @@ public class InventarioService : IInventarioService
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<InventarioService> _logger;
+    private readonly string _endpointUrl;
+    private readonly string _token;
 
-    private const string Token = "ae8bad44-7348-11ee-b962-0242ac120002";
-    private const string EndpointUrl = "https://mainserver.ziursoftware.com/Ziur.API/basedatos_01/ZiurServiceRest.svc/api/DocumentosFillsCombos";
+    private const string DefaultEndpointUrl = "https://mainserver.ziursoftware.com/Ziur.API/basedatos_01/ZiurServiceRest.svc/api/DocumentosFillsCombos";
+    private const string DefaultToken = "ae8bad44-7348-11ee-b962-0242ac120002";
 
-    public InventarioService(HttpClient httpClient, ILogger<InventarioService> logger)
+    public InventarioService(HttpClient httpClient, ILogger<InventarioService> logger, IConfiguration configuration)
     {
         _httpClient = httpClient;
         _logger = logger;
+        _endpointUrl = configuration["InventarioApi:EndpointUrl"] ?? DefaultEndpointUrl;
+        _token = configuration["InventarioApi:BearerToken"] ?? DefaultToken;
     }
 
     public async Task<List<InventarioItemDto>> GetItemsAsync()
     {
         try
         {
-            using var request = new HttpRequestMessage(HttpMethod.Get, EndpointUrl);
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            using var request = new HttpRequestMessage(HttpMethod.Get, _endpointUrl);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _token);
 
             using var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
