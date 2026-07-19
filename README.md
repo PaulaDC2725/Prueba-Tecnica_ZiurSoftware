@@ -1,5 +1,9 @@
 # Prueba Técnica: Consumo de API REST y Grilla de Inventario - Ziur Software
 
+## Despliegue en Vivo (Live Demo)
+La aplicación se encuentra desplegada y disponible en producción en la siguiente URL:
+[https://ziur-blazor-app.onrender.com/](https://ziur-blazor-app.onrender.com/)
+
 ## Título y Descripción
 Solución desarrollada en Blazor Web App (.NET 8) utilizando C# para el consumo seguro de una API REST protegida mediante autenticación Bearer Token y la presentación estructurada de datos de inventario en una grilla interactiva.
 
@@ -48,7 +52,7 @@ Durante el ciclo de desarrollo se utilizó la herramienta antigravity CLI impuls
    ```
 
 4. Ejecutar la aplicación:
-   Bash shellellell
+   ```bash
    cd ZiurTest.Blazor
    dotnet run 
    ```
