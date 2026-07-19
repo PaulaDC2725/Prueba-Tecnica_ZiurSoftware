@@ -33,9 +33,8 @@ public class InventarioService : IInventarioService
             var rawJson = await response.Content.ReadAsStringAsync();
             
             // Consologuear el JSON recibido en consola
-            _logger.LogInformation("JSON recibido de la API: {RawJson}", rawJson);
-            Console.WriteLine($"[JSON API REST]: {rawJson}");
-
+            _logger.LogInformation("JSON received from API: {RawJson}", rawJson);
+            
             using var doc = JsonDocument.Parse(rawJson);
             var jsonElement = doc.RootElement;
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
@@ -52,7 +51,6 @@ public class InventarioService : IInventarioService
             }
 
             _logger.LogInformation("Total de elementos deserializados: {Count}", result.Count);
-            Console.WriteLine($"[InventarioService] Elementos procesados: {result.Count}");
 
             return result;
         }
