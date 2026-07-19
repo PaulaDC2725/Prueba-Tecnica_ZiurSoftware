@@ -48,7 +48,7 @@ Durante el ciclo de desarrollo se utilizó la herramienta antigravity CLI impuls
    ```
 
 4. Ejecutar la aplicación:
-   Bash shell
+   ```bash
    cd ZiurTest.Blazor
    dotnet run 
    ```
